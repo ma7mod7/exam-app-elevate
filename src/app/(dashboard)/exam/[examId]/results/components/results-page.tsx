@@ -12,12 +12,11 @@ import { useQuery } from "@tanstack/react-query";
 import { GetSubmissions } from "@/app/api/questions/questions.api";
 
 
-const totalQuestions = 25;
-const correctAnswers = 20;
+
 const incorrectAnswers = 5;
 
 const chartData = [
-    { name: "Correct", value: correctAnswers, color: "#10b981" }, 
+    { name: "Correct", value: 5, color: "#10b981" }, 
     { name: "Incorrect", value: incorrectAnswers, color: "#ef4444" }, 
 ];
 
@@ -55,13 +54,13 @@ export default function ExamResultsUI({ examTitle, submissionId }: { examTitle: 
         queryKey:["exam-results",submissionId],
         queryFn:()=>GetSubmissions(submissionId),
     })
-    if(results){
-        console.log("Fetched Exam Results Data:", results);
-    }
+
     if(isError){
         console.error("Error fetching exam results");
         return <div className="text-center mt-20 text-red-500">Error: {(error).message}</div>;
     }
+    const correctAnswers=results?.analytics.filter((item)=>item.isCorrect)
+    const totalQuestions=results?.analytics.length;
 
     return (
         <div className=" m-10 p-8 bg-white  font-mono">
@@ -110,21 +109,21 @@ export default function ExamResultsUI({ examTitle, submissionId }: { examTitle: 
                     <div className="flex flex-col gap-3 w-full max-w-37.5">
                         <div className="flex items-center gap-3 font-semibold text-sm">
                             <div className="w-4 h-4 bg-emerald-500" />
-                            <span>Correct: {correctAnswers}</span>
+                            <span>Correct: {correctAnswers?.length}</span>
                         </div>
                         <div className="flex items-center gap-3 font-semibold text-sm">
                             <div className="w-4 h-4 bg-red-500" />
-                            <span>Incorrect: {incorrectAnswers}</span>
+                            <span>Incorrect: {totalQuestions!-correctAnswers?.length}</span>
                         </div>
                     </div>
                 </div>
 
                 <div className="md:col-span-2 border border-dashed border-blue-200 p-6 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                     <div className="flex flex-col gap-8">
-                        {reviewQuestions.map((q, index) => (
+                        {results?.analytics.map((q, index) => (
                             <div key={index} className="flex flex-col gap-3">
                                 <h2 className="text-lg font-bold text-blue-600 mb-1">
-                                    {q.question}
+                                    {q.questionText}
                                 </h2>
 
                                 {!q.isCorrect && (
@@ -132,14 +131,14 @@ export default function ExamResultsUI({ examTitle, submissionId }: { examTitle: 
                                         <div className="w-4 h-4 rounded-full border border-red-500 flex items-center justify-center ml-2 mr-3">
                                             <div className="w-2 h-2 bg-red-500 rounded-full" />
                                         </div>
-                                        <span className="text-gray-800 text-sm">{q.selectedAnswer}</span>
+                                        <span className="text-gray-800 text-sm">{q.selectedAnswer.text}</span>
                                     </div>
                                 )}
 
                                 <div className="flex items-center p-3 bg-emerald-50">
                                     <div className="w-4 h-4 rounded-full border border-emerald-500 flex items-center justify-center ml-2 mr-3">
                                     </div>
-                                    <span className="text-gray-800 text-sm">{q.correctAnswer}</span>
+                                    <span className="text-gray-800 text-sm">{q.correctAnswer.text}</span>
                                 </div>
                             </div>
                         ))}

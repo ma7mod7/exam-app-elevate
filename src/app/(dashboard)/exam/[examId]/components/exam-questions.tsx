@@ -23,23 +23,17 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
     });
 
     const [startedAt] = useState(() => new Date().toISOString());
-    // --- UI STATE ---
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Safely get the total number of questions (fallback to 0 if data is not there yet)
     const totalQuestions = questionsData?.length || 0;
 
-    // Get the exact question object we are currently viewing
     const currentQuestionData = questionsData?.[currentIndex];
 
-    // Check if we reached the end of the exam
     const isLastQuestion = currentIndex === totalQuestions - 1;
 
-    // Calculate progress for the progress bar
     const progressPercentage = totalQuestions > 0 ? ((currentIndex + 1) / totalQuestions) * 100 : 0;
 
-    // --- FORM STATE (react-hook-form) ---
-    // The form will store data as { "questionId": "answerId" }
+    
     const {
         register,
         handleSubmit,
@@ -47,13 +41,9 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
         formState: { errors }
     } = useForm<Record<string, string>>();
 
-    // Watch the currently selected answer for THIS specific question ID
-    // This allows us to disable the "Next" button if the user hasn't selected an answer yet
     const currentAnswer = watch(currentQuestionData?.id || "");
 
-    // --- HANDLERS ---
     const onSubmitExam = (data: Record<string, string>) => {
-        // Transform RHF object into the exact array payload format required by APIs
         const answersArray = Object.entries(data).map(([questionId, answerId]) => ({
             questionId,
             answerId
@@ -104,7 +94,6 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
                         </span>
                     </div>
 
-                    {/* Progress Bar */}
                     <div className="w-full h-3 bg-gray-100 rounded-none overflow-hidden">
                         <div
                             className="h-full bg-blue-600 transition-all duration-500"
@@ -118,17 +107,14 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
                 </div>
             </header>
 
-            {/* --- WRAP IN FORM TAG --- */}
+           
             <form onSubmit={handleSubmit(onSubmitExam)} className="mt-12">
 
-                {/* Question Text */}
                 <h1 className="text-3xl font-bold text-blue-600 mb-8 leading-snug">
                     {currentQuestionData?.text}
                 </h1>
 
-                {/* Answers List */}
                 <div className="flex flex-col gap-4 relative">
-                    {/* 👇 Changed from options.map to answers.map based on backend data */}
                     {currentQuestionData?.answers.map((answer) => {
 
                         // Check if this specific answer is currently selected
@@ -142,7 +128,6 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
                                     : 'bg-gray-50 border-transparent hover:bg-gray-100'
                                     }`}
                             >
-                                {/* Radio Input (Hidden visually, managed by RHF) */}
                                 <input
                                     type="radio"
                                     value={answer.id}
@@ -150,7 +135,6 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
                                     className="peer sr-only"
                                 />
 
-                                {/* Custom CSS Radio Circle for better UI */}
                                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-blue-600' : 'border-gray-300'
                                     }`}>
                                     <div className={`w-2.5 h-2.5 rounded-full bg-blue-600 transition-all ${isSelected ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
@@ -166,10 +150,8 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
                     })}
                 </div>
 
-                {/* Validation Error Message (Shows if user tricks the UI and tries to skip) */}
 
 
-                {/* --- FOOTER / NAVIGATION --- */}
                 <footer className="flex gap-4 mt-12">
                     <button
                         type="button"
@@ -181,7 +163,6 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
                     </button>
 
                     {isLastQuestion ? (
-                        // Submit Button (Only visible on the last question)
                         <button
                             type="submit"
                             disabled={!currentAnswer || isPending}
@@ -190,7 +171,6 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
                             {isPending ? 'Submitting...' : 'Submit Exam'}
                         </button>
                     ) : (
-                        // Next Button
                         <button
                             type="button"
                             disabled={!currentAnswer} // Force user to answer before moving to next
