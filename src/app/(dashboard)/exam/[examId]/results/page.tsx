@@ -16,8 +16,8 @@ interface QuestionsProps {
     searchParams: Promise<Record<string, string | undefined>>
 }
 
-export default async function ExamResult({  searchParams }: QuestionsProps) {
-    
+export default async function ExamResult({  searchParams,params }: QuestionsProps) {
+    const examId=(await params).examId;
     const diplomaId = (await searchParams).diplomaId||'';
     const examTitle = (await searchParams).examTitle || "Exam Title";
     const diplomaTitle = (await searchParams).diplomaTitle || "Diploma Title";
@@ -47,7 +47,7 @@ export default async function ExamResult({  searchParams }: QuestionsProps) {
                 </div>
                 <HeaderTitle title={`${examTitle} `} icon={<CircleQuestionMark width={45} height={45} />} link={`/diplomas/${diplomaId}`} />
                 <div>
-                    <ExamResultsUI examTitle={examTitle} submissionId={submissionId} />
+                    <ExamResultsUI examTitle={examTitle} submissionId={submissionId} examId={examId} />
                 </div>
             </div>
         </>

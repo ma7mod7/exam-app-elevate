@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { useQuery } from "@tanstack/react-query";
 import { GetSubmissions } from "@/app/api/questions/questions.api";
+import { useRouter } from "next/navigation";
 
 
 
@@ -25,31 +26,11 @@ const chartConfig = {
     incorrect: { label: "Incorrect", color: "#ef4444" },
 } satisfies ChartConfig;
 
-const reviewQuestions = [
-    {
-        id: 1,
-        question: "What does CSS stand for?",
-        selectedAnswer: "Computer Style Sheets",
-        correctAnswer: "Cascading Style Sheets",
-        isCorrect: false,
-    },
-    {
-        id: 2,
-        question: "What does CSS stand for?",
-        selectedAnswer: "Computer Style Sheets",
-        correctAnswer: "Cascading Style Sheets",
-        isCorrect: false,
-    },
-    {
-        id: 3,
-        question: "What does CSS stand for?",
-        selectedAnswer: "Computer Style Sheets",
-        correctAnswer: "Cascading Style Sheets",
-        isCorrect: false,
-    },
-];
 
-export default function ExamResultsUI({ examTitle, submissionId }: { examTitle: string; submissionId: string }) {
+
+export default function ExamResultsUI({ examTitle, submissionId,examId }: { examTitle: string; submissionId: string,examId:string }) {
+    const router = useRouter();
+    
     const {data:results,isError,error}=useQuery({
         queryKey:["exam-results",submissionId],
         queryFn:()=>GetSubmissions(submissionId),
@@ -58,6 +39,13 @@ export default function ExamResultsUI({ examTitle, submissionId }: { examTitle: 
     if(isError){
         console.error("Error fetching exam results");
         return <div className="text-center mt-20 text-red-500">Error: {(error).message}</div>;
+    }
+    const handleRestartExam=(examId:string)=>{
+        router.push(`/exam/${examId}`);
+        
+    }
+    const handleExplore=(examId:string)=>{
+        router.push(`/diploma/${examId}`);
     }
     const correctAnswers=results?.analytics.filter((item)=>item.isCorrect)
     const totalQuestions=results?.analytics.length;
@@ -148,11 +136,11 @@ export default function ExamResultsUI({ examTitle, submissionId }: { examTitle: 
 
             
             <footer className="flex gap-4 mt-6">
-                <button className="flex-1 flex justify-center items-center gap-2 h-12 bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-colors">
+                <button onClick={()=>handleRestartExam(examId)} className="flex-1 flex justify-center items-center gap-2 h-12 bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-colors">
                     <RotateCcw className="w-4 h-4" /> Restart
                 </button>
 
-                <button className="flex-1 flex justify-center items-center gap-2 h-12 text-white font-medium bg-blue-600 hover:bg-blue-700 transition-colors">
+                <button onClick={()=>handleExplore(examId)} className="flex-1 flex justify-center items-center gap-2 h-12 text-white font-medium bg-blue-600 hover:bg-blue-700 transition-colors">
                     <FolderOpen className="w-4 h-4" /> Explore
                 </button>
             </footer>

@@ -17,9 +17,9 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
         queryFn: () => fetchExamQuestions(examId),
     });
 
-    const { mutate,isPending } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationKey: ["exam-results", examId],
-        mutationFn: (payload:ISubmitExamData) => SubmitExamData(payload),
+        mutationFn: (payload: ISubmitExamData) => SubmitExamData(payload),
     });
 
     const [startedAt] = useState(() => new Date().toISOString());
@@ -33,7 +33,7 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
 
     const progressPercentage = totalQuestions > 0 ? ((currentIndex + 1) / totalQuestions) * 100 : 0;
 
-    
+
     const {
         register,
         handleSubmit,
@@ -58,10 +58,9 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
         mutate(finalPayload, {
             onSuccess: (data) => {
                 const submissionId = data.submission.id;
-                console.log("Exam submitted successfully, navigating to results page...");
                 router.push(`/exam/${examId}/results?diplomaTitle=${encodeURIComponent(diplomaTitle)}&examTitle=${encodeURIComponent(examTitle)}&diplomaId=${diplomaId}&submissionId=${submissionId}`);
             },
-            onError: (error:any) => {
+            onError: (error: any) => {
                 console.error("Failed to submit exam:", error);
                 toast.error("Failed to submit exam. Please try again.");
             }
@@ -107,7 +106,7 @@ export default function ExamQuestionUI({ examId, examTitle, diplomaTitle, diplom
                 </div>
             </header>
 
-           
+
             <form onSubmit={handleSubmit(onSubmitExam)} className="mt-12">
 
                 <h1 className="text-3xl font-bold text-blue-600 mb-8 leading-snug">
