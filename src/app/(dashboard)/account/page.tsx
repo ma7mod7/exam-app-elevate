@@ -52,7 +52,7 @@ export default function AccountSettings() {
     const {
         handleSubmit,
         control,
-        
+
 
     } = useForm<userProfileSchemaType>({
         resolver: zodResolver(userProfileSchema),
@@ -72,7 +72,7 @@ export default function AccountSettings() {
         }
         updateUserProfile(dataToSend, {
             onSuccess: (data) => {
-               void data
+                void data
             }
         })
 
@@ -108,8 +108,9 @@ export default function AccountSettings() {
                                     control={control}
                                     render={({ field, fieldState }) => (
                                         <Field data-invalid={fieldState.invalid}>
-                                            <FieldLabel htmlFor="input-field-email" className={`mb-1 font-medium font-mono  ${fieldState.invalid ? "text-red-500" : ""}`}>First name
-
+                                            <FieldLabel
+                                                htmlFor="input-field-email" className={`mb-1 font-medium font-mono  ${fieldState.invalid ? "text-red-500" : ""}`}>
+                                                First name
                                             </FieldLabel>
                                             <Input
                                                 {...field}

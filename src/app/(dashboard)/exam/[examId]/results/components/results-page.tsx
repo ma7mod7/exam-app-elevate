@@ -48,6 +48,7 @@ export default function ExamResultsUI({ examTitle, submissionId,examId }: { exam
         router.push(`/diploma/${examId}`);
     }
     const correctAnswers=results?.analytics.filter((item)=>item.isCorrect)
+    const correctAnswersLength=correctAnswers?.length
     const totalQuestions=results?.analytics.length;
 
     return (
@@ -101,7 +102,7 @@ export default function ExamResultsUI({ examTitle, submissionId,examId }: { exam
                         </div>
                         <div className="flex items-center gap-3 font-semibold text-sm">
                             <div className="w-4 h-4 bg-red-500" />
-                            <span>Incorrect: {totalQuestions!-correctAnswers?.length}</span>
+                            <span>Incorrect: {totalQuestions!-correctAnswersLength!}</span>
                         </div>
                     </div>
                 </div>

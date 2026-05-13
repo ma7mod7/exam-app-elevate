@@ -1,22 +1,16 @@
-
 import HeaderAdmin from "@/app/shared/components/header-admin";
+import SearchAndFilters from "@/app/shared/components/search-filters";
 import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
 
-
 } from "@/components/ui/breadcrumb"
+import AdminTable from "@/app/shared/components/admin-table";
 
 
-
-interface QuestionsProps {
-    params: Promise<{ examList: string, examId: string }>;
-    searchParams: Promise<Record<string, string | undefined>>
-}
-
-export default async function DiplomaListAdmin({ params, searchParams }: QuestionsProps) {
+export default  function DiplomaListAdmin() {
 
 
     return (
@@ -25,7 +19,7 @@ export default async function DiplomaListAdmin({ params, searchParams }: Questio
                 <Breadcrumb className="p-4 px-6">
                     <BreadcrumbList>
                         <BreadcrumbItem className="text-gray-500 font-mono">
-                            <BreadcrumbLink href="/diplomas">Diplomas</BreadcrumbLink>
+                            <BreadcrumbLink href="/admin-diploma">Diplomas</BreadcrumbLink>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
@@ -33,9 +27,17 @@ export default async function DiplomaListAdmin({ params, searchParams }: Questio
                 <div>
                     <HeaderAdmin actionTitle={'Add New Diploma'} />
                 </div>
-                
+            </div>
+            {/* search and filters */}
+            <div>
+                <SearchAndFilters />
+            </div>
+            {/* table of diplomas */}
+            <div >
+                <AdminTable />
             </div>
         </>
     )
 
 }
+

@@ -13,12 +13,11 @@ export async function getDiplomas(req: NextRequest) {
     })
 
     if (!token) {
-        throw new Error("Next.js Error: No token found in cookies ❌");
+        throw new Error("Next.js Error: No token found in cookies ");
     }
 
     const page = Number(req.nextUrl.searchParams.get("page")) || 1;
     const limit = Number(req.nextUrl.searchParams.get("limit")) || 12;
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const response = await fetch(`https://exam-app.elevate-bootcamp.cloud/api/diplomas?page=${page}&limit=${limit}`, {
         method: "GET",
         headers: {

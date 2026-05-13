@@ -10,3 +10,7 @@ export interface IDiploma extends IDocumentFields{
     immutable:boolean;
 
 }
+
+export interface ISpecificDiploma {
+    diploma: IDiploma;
+}
